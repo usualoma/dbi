@@ -1533,6 +1533,8 @@ sub _new_sth {	# called by DBD::<drivername>::db::prepare)
 	    while ( my ($k, $v) = each %$old_dbh ) {
 		# ignore non-code refs, i.e., caches, handles, Err etc
 		next if ref $v && ref $v ne 'CODE'; # HandleError etc
+		# ignore CachedKids if its value is undef by weak reference
+		next if $k eq 'CachedKids' && !$v;
 		$attr->{$k} = $v;
 	    }
 	    # explicitly set attributes which are unlikely to be in the
